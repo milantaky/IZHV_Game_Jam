@@ -3,6 +3,7 @@ using UnityEngine;
 public class CameraRotation : MonoBehaviour
 {
     public float rotationSpeed = 0.2f;
+    public Vector3 center = Vector3.zero;
 
     // Update is called once per frame
     void Update()
@@ -10,13 +11,13 @@ public class CameraRotation : MonoBehaviour
         
         while (Input.GetKey("a"))
         {
-            transform.Rotate(0, -rotationSpeed, 0);  
+            transform.RotateAround(center, Vector3.up, rotationSpeed);
             break; 
         }
         
         while (Input.GetKey("d")) 
         {
-            transform.Rotate(0, rotationSpeed, 0); 
+            transform.RotateAround(center, Vector3.up, -rotationSpeed);
             break;
         }
     }
