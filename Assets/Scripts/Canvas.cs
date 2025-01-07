@@ -5,7 +5,8 @@ public enum PaintTool
 {
     Brush,
     Spray, 
-    Eraser
+    Eraser,
+    Ball
 }
 
 public class Canvas : MonoBehaviour
@@ -16,10 +17,12 @@ public class Canvas : MonoBehaviour
     public Color paintColor;
     public PaintTool currentTool = PaintTool.Brush;
     public Slider brushSizeSlider;
+    public GameObject colorBallPrefab;
 
     private Texture2D canvasTexture;
     private Vector2 lastMousePosition;
     private bool hasLastPosition = false;
+    private bool canThrowBall = true;
     
     void Start()
     {
@@ -33,7 +36,6 @@ public class Canvas : MonoBehaviour
         brushSizeSlider.onValueChanged.AddListener(OnBrushSizeChanged);
     }
 
-    // Update is called once per frame
     void Update()
     {
         paintColor = colorPicker.GetCurrentColor();
@@ -54,6 +56,25 @@ public class Canvas : MonoBehaviour
             currentTool = PaintTool.Eraser;
             Debug.Log("Selected tool: Eraser");
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            currentTool = PaintTool.Ball;
+            Debug.Log("Selected tool: Ball");
+        }
+        
+        if (currentTool == PaintTool.Ball && Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                if (canThrowBall)
+                {
+                    ThrowBall(hit);
+                    canThrowBall = false;
+                }
+            }
+        }
         
         // Left mouse button clicked -> paint
         if (Input.GetKey(KeyCode.Mouse0))
@@ -63,6 +84,7 @@ public class Canvas : MonoBehaviour
             // Returns true if hits the canvas
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
+                
                 Vector2 currentMousePosition = hit.textureCoord * canvasSize;
                 
                 if (hasLastPosition)
@@ -91,6 +113,11 @@ public class Canvas : MonoBehaviour
                 {
                     Paint(currentMousePosition);
                     hasLastPosition = true;
+                    
+                    if (!canThrowBall)  // Pokud nebyla koule vystřelena
+                    {
+                        canThrowBall = true; // Umožníme vystřelit kouli až při příštím kliknutí
+                    }
                 }
 
                 lastMousePosition = currentMousePosition;
@@ -185,8 +212,6 @@ public class Canvas : MonoBehaviour
         }
     }
     
-    
-
     void ClearCanvas()
     {
         for (int x = 0; x < canvasSize; x++)
@@ -198,4 +223,53 @@ public class Canvas : MonoBehaviour
         }
         canvasTexture.Apply();
     }
+    
+    void ThrowBall(RaycastHit hit)
+    {
+        // Creating a ball
+        GameObject ball = Instantiate(colorBallPrefab, Camera.main.transform.position, Quaternion.identity);
+        Vector3 targetPosition = hit.point;
+        Vector3 direction = (targetPosition - ball.transform.position).normalized;
+        Rigidbody rb = ball.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.AddForce(direction * 2000f);
+        }
+    }
+
+    public void ExplodeBall(Vector3 position)
+    {
+        Debug.Log("YUP");
+        
+        for (int i = 0; i < 100; i++)
+        {
+            float x = Random.Range(0f, canvasSize);
+            float y = Random.Range(0f, canvasSize);
+            // Paint(new Vector2(x, y)); 
+            PaintBrush((int)x, (int)y);
+        }
+        
+        canvasTexture.Apply();
+        
+    }
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("ColorBall"))
+        {
+            // Where the ball hit
+            Vector3 impactPosition = collision.contacts[0].point;
+            
+            Vector2 canvasCoord = new Vector2(impactPosition.x, impactPosition.z); 
+            Vector2 textureCoord = canvasCoord * canvasSize;
+            
+            // Effect
+            ExplodeBall(textureCoord);
+            
+            // Destroy ball after collision
+            Destroy(collision.gameObject);
+        }
+    }
+
 }

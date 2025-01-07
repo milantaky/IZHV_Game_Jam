@@ -2768,7 +2768,7 @@ GameObject:
   - component: {fileID: 1865737331}
   m_Layer: 0
   m_Name: InkPlane
-  m_TagString: Untagged
+  m_TagString: InkPlane
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2806,6 +2806,7 @@ MonoBehaviour:
   paintColor: {r: 0, g: 0, b: 0, a: 1}
   currentTool: 0
   brushSizeSlider: {fileID: 1704862720}
+  colorBallPrefab: {fileID: 4435744856699078025, guid: 8921d084e36ce40a3a8d2ad1039b7865, type: 3}
 --- !u!64 &1865737328
 MeshCollider:
   m_ObjectHideFlags: 0
