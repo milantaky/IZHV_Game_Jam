@@ -7,8 +7,9 @@ public class Canvas : MonoBehaviour
     public Color paintColor = Color.black;
 
     private Texture2D canvasTexture;
+    private Vector2 lastMousePosition;
+    private bool hasLastPosition = false;
     
-    // Start is called before the first frame update
     void Start()
     {
         // Canvas texture
@@ -29,8 +30,43 @@ public class Canvas : MonoBehaviour
             // Returns true if hits the canvas
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Paint(hit.textureCoord);
+                Vector2 currentMousePosition = hit.textureCoord * canvasSize;
+                
+                if (hasLastPosition)
+                {
+                    // Interpolation so there are not spaces between faster draws
+                    float distance = Vector2.Distance(lastMousePosition, currentMousePosition);
+                    
+                    // Only interpolate if the distance is significant
+                    if (distance > 1f) 
+                    {
+                        int steps = Mathf.CeilToInt(distance / 10);
+
+                        for (int i = 0; i <= steps; i++)
+                        {
+                            Vector2 interpolatedPosition = Vector2.Lerp(lastMousePosition, currentMousePosition, i / (float)steps);
+                        
+                            // Check for NaN values
+                            if (!float.IsNaN(interpolatedPosition.x) && !float.IsNaN(interpolatedPosition.y))
+                            {
+                                Paint(interpolatedPosition);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Paint(currentMousePosition);
+                    hasLastPosition = true;
+                }
+
+                lastMousePosition = currentMousePosition;
             }
+        }
+        else
+        {
+            // Reset after unpressing button
+            hasLastPosition = false;
         }
         
         // "r" clicked -> reset canvas
@@ -44,8 +80,10 @@ public class Canvas : MonoBehaviour
     void Paint(Vector2 textureCoord)
     {
         // Coords in texture space
-        int x = (int)(textureCoord.x * canvasSize);
-        int y = (int)(textureCoord.y * canvasSize);
+        int x = Mathf.FloorToInt(textureCoord.x);
+        int y = Mathf.FloorToInt(textureCoord.y);
+
+        // Debug.Log("Coords: " + y + " " + x);
         
         canvasTexture.SetPixel(x, y, paintColor);
 
