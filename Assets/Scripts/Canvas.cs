@@ -13,20 +13,28 @@ public class Canvas : MonoBehaviour
         canvasTexture = new Texture2D(canvasSize, canvasSize);
         GetComponent<Renderer>().material.mainTexture = canvasTexture;
         
-        // Filling it blue to see if it works
-        for (int x = 0; x < canvasSize; x++)
-        {
-            for (int y = 0; y < canvasSize; y++)
-            {
-                canvasTexture.SetPixel(x, y, Color.blue); 
-            }
-        }
-        canvasTexture.Apply();
+        ClearCanvas();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ClearCanvas();
+            Debug.Log("Canvas cleared");
+        }   
+    }
+
+    void ClearCanvas()
+    {
+        for (int x = 0; x < canvasSize; x++)
+        {
+            for (int y = 0; y < canvasSize; y++)
+            {
+                canvasTexture.SetPixel(x, y, Color.white); 
+            }
+        }
+        canvasTexture.Apply();
     }
 }
