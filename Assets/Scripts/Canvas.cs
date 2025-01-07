@@ -4,7 +4,8 @@ public class Canvas : MonoBehaviour
 {
     public int canvasSize = 512; // 10 units * 100 pixels
     public int brushSize = 5;
-    public Color paintColor = Color.black;
+    public ColorPicker colorPicker;
+    public Color paintColor;
 
     private Texture2D canvasTexture;
     private Vector2 lastMousePosition;
@@ -22,6 +23,8 @@ public class Canvas : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        paintColor = colorPicker.GetCurrentColor();
+        
         // Left mouse button clicked -> paint
         if (Input.GetKey(KeyCode.Mouse0))
         {
