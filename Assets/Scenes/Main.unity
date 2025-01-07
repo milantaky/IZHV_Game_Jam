@@ -2206,6 +2206,7 @@ GameObject:
   - component: {fileID: 1865737329}
   - component: {fileID: 1865737328}
   - component: {fileID: 1865737327}
+  - component: {fileID: 1865737331}
   m_Layer: 0
   m_Name: InkPlane
   m_TagString: Untagged
@@ -2242,7 +2243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvasSize: 1000
   brushSize: 10
-  colorPicker: {fileID: 0}
+  colorPicker: {fileID: 1865737331}
   paintColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!64 &1865737328
 MeshCollider:
@@ -2316,6 +2317,23 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1865737325}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1865737331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865737325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4d603353acb340c7bb251bfa1275ab9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  redSlider: {fileID: 335406385}
+  greenSlider: {fileID: 485308394}
+  blueSlider: {fileID: 1557336785}
+  colorValueText: {fileID: 426258301}
+  colorDisplay: {fileID: 34480947}
 --- !u!1 &1904281531
 GameObject:
   m_ObjectHideFlags: 0
@@ -2325,7 +2343,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1904281532}
-  - component: {fileID: 1904281533}
   m_Layer: 5
   m_Name: ColorPicker
   m_TagString: Untagged
@@ -2358,23 +2375,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1904281533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904281531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4d603353acb340c7bb251bfa1275ab9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  redSlider: {fileID: 335406385}
-  greenSlider: {fileID: 485308394}
-  blueSlider: {fileID: 1557336785}
-  colorValueText: {fileID: 426258301}
-  colorDisplay: {fileID: 34480947}
 --- !u!1 &1967824451
 GameObject:
   m_ObjectHideFlags: 0
