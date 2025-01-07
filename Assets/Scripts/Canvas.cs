@@ -1,4 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
+
+public enum PaintTool
+{
+    Brush,
+    Spray
+}
 
 public class Canvas : MonoBehaviour
 {
@@ -6,6 +13,8 @@ public class Canvas : MonoBehaviour
     public int brushSize = 5;
     public ColorPicker colorPicker;
     public Color paintColor;
+    public PaintTool currentTool = PaintTool.Brush;
+    public Slider brushSizeSlider;
 
     private Texture2D canvasTexture;
     private Vector2 lastMousePosition;
@@ -18,12 +27,27 @@ public class Canvas : MonoBehaviour
         GetComponent<Renderer>().material.mainTexture = canvasTexture;
         
         ClearCanvas();
+        
+        brushSizeSlider.value = brushSize;
+        brushSizeSlider.onValueChanged.AddListener(OnBrushSizeChanged);
     }
 
     // Update is called once per frame
     void Update()
     {
         paintColor = colorPicker.GetCurrentColor();
+        
+        // Switching between tools
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            currentTool = PaintTool.Brush;
+            Debug.Log("Selected tool: Brush");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            currentTool = PaintTool.Spray;
+            Debug.Log("Selected tool: Spray");
+        }
         
         // Left mouse button clicked -> paint
         if (Input.GetKey(KeyCode.Mouse0))
@@ -79,6 +103,12 @@ public class Canvas : MonoBehaviour
             Debug.Log("Canvas cleared");
         }   
     }
+    
+    void OnBrushSizeChanged(float newSize)
+    {
+        brushSize = Mathf.RoundToInt(newSize);
+        Debug.Log("Brush size: " + brushSize);
+    }
 
     void Paint(Vector2 textureCoord)
     {
@@ -86,10 +116,21 @@ public class Canvas : MonoBehaviour
         int x = Mathf.FloorToInt(textureCoord.x);
         int y = Mathf.FloorToInt(textureCoord.y);
 
-        // Debug.Log("Coords: " + y + " " + x);
+        switch (currentTool)
+        {
+            case PaintTool.Brush:
+                PaintBrush(x, y);
+                break;
+            case PaintTool.Spray:
+                PaintSpray(x, y);
+                break;
+        }
         
-        canvasTexture.SetPixel(x, y, paintColor);
+        canvasTexture.Apply();
+    }
 
+    void PaintBrush(int x, int y)
+    {
         for (int i = -brushSize; i <= brushSize; i++)
         {
             for (int j = -brushSize; j <= brushSize; j++)
@@ -100,8 +141,26 @@ public class Canvas : MonoBehaviour
                 }
             }
         }
-        
-        canvasTexture.Apply();
+    }
+    
+    void PaintSpray(int x, int y)
+    {
+        int sprayDensity = 50; 
+        float sprayRadius = brushSize;
+
+        for (int i = 0; i < sprayDensity; i++)
+        {
+            float angle = Random.Range(0f, Mathf.PI * 2); 
+            float radius = Random.Range(0f, sprayRadius);
+
+            int sprayX = Mathf.FloorToInt(x + Mathf.Cos(angle) * radius);
+            int sprayY = Mathf.FloorToInt(y + Mathf.Sin(angle) * radius);
+
+            if (sprayX >= 0 && sprayX < canvasSize && sprayY >= 0 && sprayY < canvasSize)
+            {
+                canvasTexture.SetPixel(sprayX, sprayY, paintColor);
+            }
+        }
     }
 
     void ClearCanvas()
