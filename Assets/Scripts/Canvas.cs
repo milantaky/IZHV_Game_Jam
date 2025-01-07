@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public enum PaintTool
 {
     Brush,
-    Spray
+    Spray, 
+    Eraser
 }
 
 public class Canvas : MonoBehaviour
@@ -47,6 +48,11 @@ public class Canvas : MonoBehaviour
         {
             currentTool = PaintTool.Spray;
             Debug.Log("Selected tool: Spray");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            currentTool = PaintTool.Eraser;
+            Debug.Log("Selected tool: Eraser");
         }
         
         // Left mouse button clicked -> paint
@@ -107,7 +113,6 @@ public class Canvas : MonoBehaviour
     void OnBrushSizeChanged(float newSize)
     {
         brushSize = Mathf.RoundToInt(newSize);
-        Debug.Log("Brush size: " + brushSize);
     }
 
     void Paint(Vector2 textureCoord)
@@ -123,6 +128,9 @@ public class Canvas : MonoBehaviour
                 break;
             case PaintTool.Spray:
                 PaintSpray(x, y);
+                break;
+            case PaintTool.Eraser:
+                PaintEraser(x, y);
                 break;
         }
         
@@ -162,6 +170,22 @@ public class Canvas : MonoBehaviour
             }
         }
     }
+    
+    void PaintEraser(int x, int y)
+    {
+        for (int i = -brushSize; i <= brushSize; i++)
+        {
+            for (int j = -brushSize; j <= brushSize; j++)
+            {
+                if (x + i >= 0 && x + i < canvasSize && y + j >= 0 && y + j < canvasSize)
+                {
+                    canvasTexture.SetPixel(x + i, y + j, Color.white);
+                }
+            }
+        }
+    }
+    
+    
 
     void ClearCanvas()
     {
