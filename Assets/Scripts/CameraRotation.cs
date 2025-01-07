@@ -10,13 +10,13 @@ public class CameraRotation : MonoBehaviour
     void Update()
     {
         // Horizontal
-        while (Input.GetKey("a"))
+        while (Input.GetKey(KeyCode.A))
         {
             transform.RotateAround(center, Vector3.up, rotationSpeed);
             break; 
         }
         
-        while (Input.GetKey("d")) 
+        while (Input.GetKey(KeyCode.D)) 
         {
             transform.RotateAround(center, Vector3.down, rotationSpeed);
             break;
@@ -25,7 +25,7 @@ public class CameraRotation : MonoBehaviour
         // Vertical
         // Vector3 cameraRotation = Camera.main.transform.rotation.eulerAngles;
         //
-        // while (Input.GetKey("w")) 
+        // while (Input.GetKey(KeyCode.W)) 
         // {
         //     if (cameraRotation.x < 345)
         //     {
@@ -34,7 +34,7 @@ public class CameraRotation : MonoBehaviour
         //     break;
         // }
         //
-        // while (Input.GetKey("s"))
+        // while (Input.GetKey(KeyCode.S))
         // {
         //     if (cameraRotation.x > 15)
         //     {

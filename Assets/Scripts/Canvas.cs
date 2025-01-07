@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Canvas : MonoBehaviour
 {
-    public int canvasSize = 1000; // 10 units * 100 pixels
-    public int brushSize = 10;
+    public int canvasSize = 512; // 10 units * 100 pixels
+    public int brushSize = 5;
     public Color paintColor = Color.black;
 
     private Texture2D canvasTexture;
@@ -22,19 +22,14 @@ public class Canvas : MonoBehaviour
     void Update()
     {
         // Left mouse button clicked -> paint
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKey(KeyCode.Mouse0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             
             // Returns true if hits the canvas
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Debug.Log("hit" + hit.textureCoord);
                 Paint(hit.textureCoord);
-            }
-            else
-            {
-                Debug.Log("not hit");
             }
         }
         
