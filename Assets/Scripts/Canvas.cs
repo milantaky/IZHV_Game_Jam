@@ -41,6 +41,9 @@ public class Canvas : MonoBehaviour
 
     void Update()
     {
+        if (!StartMenuController.isGameRunning) 
+            return;
+        
         paintColor = colorPicker.GetCurrentColor();
         
         // Switching between tools

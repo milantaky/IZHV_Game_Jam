@@ -9,6 +9,9 @@ public class CameraRotation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!StartMenuController.isGameRunning) 
+            return;
+        
         // Horizontal
         while (Input.GetKey(KeyCode.A))
         {
