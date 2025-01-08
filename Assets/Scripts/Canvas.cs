@@ -19,6 +19,7 @@ public class Canvas : MonoBehaviour
     public Slider brushSizeSlider;
     public GameObject colorBallPrefab;
     public GameObject paintParticlesPrefab;
+    public Texture2D splashTemplate;
 
     private Texture2D canvasTexture;
     private Vector2 lastMousePosition;
@@ -209,25 +210,53 @@ public class Canvas : MonoBehaviour
 
     void PaintBall(int x, int y)
     {
-        int splashRadius = 20;
-    
-        for (int i = -splashRadius; i <= splashRadius; i++)
-        {
-            for (int j = -splashRadius; j <= splashRadius; j++)
-            {
-                float distance = Mathf.Sqrt(i * i + j * j);
-                if (distance <= splashRadius)
-                {
-                    int pixelX = x + i;
-                    int pixelY = y + j;
+        int splashSize = splashTemplate.width;
+        int startX = Mathf.FloorToInt(x) - splashSize / 2;
+        int startY = Mathf.FloorToInt(y) - splashSize / 2;
 
-                    if (pixelX >= 0 && pixelX < canvasSize && pixelY >= 0 && pixelY < canvasSize)
-                    {
-                        canvasTexture.SetPixel(pixelX, pixelY, paintColor);
-                    }
+        for (int i = 0; i < splashSize; i++)
+        {
+            for (int j = 0; j < splashSize; j++)
+            {
+                Color splashPixel = splashTemplate.GetPixel(i, j);
+
+                if (splashPixel == Color.clear)
+                {
+                    continue;
+                }
+                
+                splashPixel = paintColor;
+
+                int canvasX = startX + i;
+                int canvasY = startY + j;
+
+                if (canvasX >= 0 && canvasX < canvasSize && canvasY >= 0 && canvasY < canvasSize)
+                {
+                    canvasTexture.SetPixel(canvasX, canvasY, splashPixel);
                 }
             }
         }
+
+        
+        // int splashRadius = 20;
+        //
+        // for (int i = -splashRadius; i <= splashRadius; i++)
+        // {
+        //     for (int j = -splashRadius; j <= splashRadius; j++)
+        //     {
+        //         float distance = Mathf.Sqrt(i * i + j * j);
+        //         if (distance <= splashRadius)
+        //         {
+        //             int pixelX = x + i;
+        //             int pixelY = y + j;
+        //
+        //             if (pixelX >= 0 && pixelX < canvasSize && pixelY >= 0 && pixelY < canvasSize)
+        //             {
+        //                 canvasTexture.SetPixel(pixelX, pixelY, paintColor);
+        //             }
+        //         }
+        //     }
+        // }
     }
     
     void ClearCanvas()

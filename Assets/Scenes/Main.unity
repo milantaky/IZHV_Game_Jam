@@ -2807,6 +2807,8 @@ MonoBehaviour:
   currentTool: 0
   brushSizeSlider: {fileID: 1704862720}
   colorBallPrefab: {fileID: 4435744856699078025, guid: 8921d084e36ce40a3a8d2ad1039b7865, type: 3}
+  paintParticlesPrefab: {fileID: 8846406139511718871, guid: 9493a3f23eec14b21a5b907397c66904, type: 3}
+  splashTemplate: {fileID: 2800000, guid: 3d6cea0a5cf12430a8af6bee929747c3, type: 3}
 --- !u!64 &1865737328
 MeshCollider:
   m_ObjectHideFlags: 0
