@@ -26,25 +26,36 @@ public class CameraRotation : MonoBehaviour
         }
         
         // Vertical
-        // Vector3 cameraRotation = Camera.main.transform.rotation.eulerAngles;
-        //
-        // while (Input.GetKey(KeyCode.W)) 
-        // {
-        //     if (cameraRotation.x < 345)
-        //     {
-        //         transform.RotateAround(center, new Vector3(-1,0,0), rotationSpeed);
-        //     }
-        //     break;
-        // }
-        //
-        // while (Input.GetKey(KeyCode.S))
-        // {
-        //     if (cameraRotation.x > 15)
-        //     {
-        //         transform.RotateAround(center, new Vector3(1,0,0), rotationSpeed);
-        //     }
-        //     break;
-        // }
+        Vector3 cameraRotation = Camera.main.transform.rotation.eulerAngles;
+        Vector3 cameraPosition = Camera.main.transform.position;
+        
+        while (Input.GetKey(KeyCode.W)) 
+        {
+            if (cameraRotation.x < 345)
+            {
+                Vector3 helper = cameraPosition;
+                helper.y++;
+
+                Vector3 cross = Vector3.Cross(helper, cameraPosition);
+                
+                transform.RotateAround(center, cross, -rotationSpeed);
+            }
+            break;
+        }
+        
+        while (Input.GetKey(KeyCode.S))
+        {
+            if (cameraRotation.x > 15)
+            {
+                Vector3 helper = cameraPosition;
+                helper.y++;
+
+                Vector3 cross = Vector3.Cross(helper, cameraPosition);
+                
+                transform.RotateAround(center, cross, rotationSpeed);
+            }
+            break;
+        }
         
     }
 }
