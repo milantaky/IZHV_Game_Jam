@@ -299,7 +299,7 @@ public class Canvas : MonoBehaviour
             Vector3 impactPosition = collision.contacts[0].point;
             
             GameObject particles = Instantiate(paintParticlesPrefab, impactPosition, Quaternion.identity);
-            Debug.Log(impactPosition);
+
             float normX = 512 - ((impactPosition.x + 5) / 10 * 512);
             float normZ = 512 - ((impactPosition.z + 5) / 10 * 512);
             
