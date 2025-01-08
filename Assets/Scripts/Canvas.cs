@@ -11,18 +11,18 @@ public enum PaintTool
 
 public class Canvas : MonoBehaviour
 {
-    public int canvasSize = 512; // 10 units * 100 pixels
+    public int canvasSize = 512;
     public int brushSize = 5;
     public ColorPicker colorPicker;
     public Color paintColor;
     public PaintTool currentTool = PaintTool.Brush;
     public Slider brushSizeSlider;
     public GameObject colorBallPrefab;
+    public GameObject paintParticlesPrefab;
 
     private Texture2D canvasTexture;
     private Vector2 lastMousePosition;
     private bool hasLastPosition = false;
-    private bool canThrowBall = true;
     
     void Start()
     {
@@ -62,29 +62,26 @@ public class Canvas : MonoBehaviour
             Debug.Log("Selected tool: Ball");
         }
         
+        // Exploding ball
         if (currentTool == PaintTool.Ball && Input.GetKeyDown(KeyCode.Mouse0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
     
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                if (canThrowBall)
-                {
-                    ThrowBall(hit);
-                    canThrowBall = false;
-                }
+                Vector2 currentMousePosition = hit.textureCoord * canvasSize;
+                ThrowBall(hit);
             }
         }
         
         // Left mouse button clicked -> paint
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Mouse0) && currentTool != PaintTool.Ball)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             
             // Returns true if hits the canvas
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                
                 Vector2 currentMousePosition = hit.textureCoord * canvasSize;
                 
                 if (hasLastPosition)
@@ -113,11 +110,6 @@ public class Canvas : MonoBehaviour
                 {
                     Paint(currentMousePosition);
                     hasLastPosition = true;
-                    
-                    if (!canThrowBall)  // Pokud nebyla koule vystřelena
-                    {
-                        canThrowBall = true; // Umožníme vystřelit kouli až při příštím kliknutí
-                    }
                 }
 
                 lastMousePosition = currentMousePosition;
@@ -158,6 +150,9 @@ public class Canvas : MonoBehaviour
                 break;
             case PaintTool.Eraser:
                 PaintEraser(x, y);
+                break;
+            case PaintTool.Ball:
+                PaintBall(x, y);
                 break;
         }
         
@@ -211,6 +206,29 @@ public class Canvas : MonoBehaviour
             }
         }
     }
+
+    void PaintBall(int x, int y)
+    {
+        int splashRadius = 20;
+    
+        for (int i = -splashRadius; i <= splashRadius; i++)
+        {
+            for (int j = -splashRadius; j <= splashRadius; j++)
+            {
+                float distance = Mathf.Sqrt(i * i + j * j);
+                if (distance <= splashRadius)
+                {
+                    int pixelX = x + i;
+                    int pixelY = y + j;
+
+                    if (pixelX >= 0 && pixelX < canvasSize && pixelY >= 0 && pixelY < canvasSize)
+                    {
+                        canvasTexture.SetPixel(pixelX, pixelY, paintColor);
+                    }
+                }
+            }
+        }
+    }
     
     void ClearCanvas()
     {
@@ -237,22 +255,6 @@ public class Canvas : MonoBehaviour
             rb.AddForce(direction * 2000f);
         }
     }
-
-    public void ExplodeBall(Vector3 position)
-    {
-        Debug.Log("YUP");
-        
-        for (int i = 0; i < 100; i++)
-        {
-            float x = Random.Range(0f, canvasSize);
-            float y = Random.Range(0f, canvasSize);
-            // Paint(new Vector2(x, y)); 
-            PaintBrush((int)x, (int)y);
-        }
-        
-        canvasTexture.Apply();
-        
-    }
     
     void OnCollisionEnter(Collision collision)
     {
@@ -261,15 +263,21 @@ public class Canvas : MonoBehaviour
             // Where the ball hit
             Vector3 impactPosition = collision.contacts[0].point;
             
-            Vector2 canvasCoord = new Vector2(impactPosition.x, impactPosition.z); 
-            Vector2 textureCoord = canvasCoord * canvasSize;
+            GameObject particles = Instantiate(paintParticlesPrefab, impactPosition, Quaternion.identity);
+            Debug.Log(impactPosition);
+            float normX = 512 - ((impactPosition.x + 5) / 10 * 512);
+            float normZ = 512 - ((impactPosition.z + 5) / 10 * 512);
+            
+            Paint(new Vector2(normX, normZ));
             
             // Effect
-            ExplodeBall(textureCoord);
+            Destroy(particles, 2f);
             
             // Destroy ball after collision
             Destroy(collision.gameObject);
         }
     }
+    
+    
 
 }

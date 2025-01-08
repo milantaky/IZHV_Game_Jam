@@ -2800,8 +2800,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4628438fe351347e2b170d11a59ac9e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasSize: 1000
-  brushSize: 10
+  canvasSize: 512
+  brushSize: 5
   colorPicker: {fileID: 1865737331}
   paintColor: {r: 0, g: 0, b: 0, a: 1}
   currentTool: 0
