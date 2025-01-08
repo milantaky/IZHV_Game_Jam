@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +21,8 @@ public class Canvas : MonoBehaviour
     public GameObject colorBallPrefab;
     public GameObject paintParticlesPrefab;
     public Texture2D splashTemplate;
-
+    public TextMeshProUGUI selectedToolText;
+    
     private Texture2D canvasTexture;
     private Vector2 lastMousePosition;
     private bool hasLastPosition = false;
@@ -45,21 +47,25 @@ public class Canvas : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             currentTool = PaintTool.Brush;
+            selectedToolText.text = "Brush";
             Debug.Log("Selected tool: Brush");
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             currentTool = PaintTool.Spray;
+            selectedToolText.text = "Spray";
             Debug.Log("Selected tool: Spray");
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             currentTool = PaintTool.Eraser;
+            selectedToolText.text = "Eraser";
             Debug.Log("Selected tool: Eraser");
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             currentTool = PaintTool.Ball;
+            selectedToolText.text = "Ball";
             Debug.Log("Selected tool: Ball");
         }
         
