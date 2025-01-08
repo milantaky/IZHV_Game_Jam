@@ -22,7 +22,11 @@ public class Canvas : MonoBehaviour
     public GameObject paintParticlesPrefab;
     public Texture2D splashTemplate;
     public TextMeshProUGUI selectedToolText;
-    
+    public AudioSource ballDrop;
+    public AudioSource spraySound;
+    public AudioSource eraserSound;
+    public AudioSource brushSound;
+
     private Texture2D canvasTexture;
     private Vector2 lastMousePosition;
     private bool hasLastPosition = false;
@@ -81,6 +85,7 @@ public class Canvas : MonoBehaviour
             {
                 Vector2 currentMousePosition = hit.textureCoord * canvasSize;
                 ThrowBall(hit);
+                ballDrop.Play();
             }
         }
         
@@ -120,6 +125,21 @@ public class Canvas : MonoBehaviour
                 {
                     Paint(currentMousePosition);
                     hasLastPosition = true;
+                    
+                    if (spraySound.isPlaying)
+                    {
+                        spraySound.Stop();
+                    }
+                    
+                    if (eraserSound.isPlaying)
+                    {
+                        eraserSound.Stop();
+                    }
+                    
+                    if (brushSound.isPlaying)
+                    {
+                        brushSound.Stop();
+                    }
                 }
 
                 lastMousePosition = currentMousePosition;
@@ -171,6 +191,11 @@ public class Canvas : MonoBehaviour
 
     void PaintBrush(int x, int y)
     {
+        if (!brushSound.isPlaying)
+        {
+            brushSound.Play();
+        }
+        
         for (int i = -brushSize; i <= brushSize; i++)
         {
             for (int j = -brushSize; j <= brushSize; j++)
@@ -187,6 +212,11 @@ public class Canvas : MonoBehaviour
     {
         int sprayDensity = 50; 
         float sprayRadius = brushSize;
+        
+        if (!spraySound.isPlaying)
+        {
+            spraySound.Play();
+        }
 
         for (int i = 0; i < sprayDensity; i++)
         {
@@ -205,6 +235,11 @@ public class Canvas : MonoBehaviour
     
     void PaintEraser(int x, int y)
     {
+        if (!eraserSound.isPlaying)
+        {
+            eraserSound.Play();
+        }
+        
         for (int i = -brushSize; i <= brushSize; i++)
         {
             for (int j = -brushSize; j <= brushSize; j++)
