@@ -350,7 +350,5 @@ public class Canvas : MonoBehaviour
             Destroy(collision.gameObject);
         }
     }
-    
-    
 
 }

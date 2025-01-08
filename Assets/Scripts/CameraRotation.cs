@@ -6,6 +6,9 @@ public class CameraRotation : MonoBehaviour
     public float rotationSpeed = 0.2f;
     public Vector3 center = Vector3.zero;
 
+    private Vector3 cameraStartPosition = new Vector3(0, 9.5f, 16); 
+    private Vector3 cameraStartRotation = new Vector3(25.277f, 180, 0); 
+        
     // Update is called once per frame
     void Update()
     {
@@ -55,6 +58,13 @@ public class CameraRotation : MonoBehaviour
                 transform.RotateAround(center, cross, rotationSpeed);
             }
             break;
+        }
+
+        // Camera reset
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            Camera.main.transform.position = cameraStartPosition;
+            Camera.main.transform.rotation = Quaternion.Euler(cameraStartRotation);
         }
         
     }

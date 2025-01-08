@@ -4546,7 +4546,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -230, y: -50}
+  m_AnchoredPosition: {x: -230, y: -115}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1029894174
@@ -4933,10 +4933,19 @@ MonoBehaviour:
 
     - D: Move Right
 
+    - W: Move Forward
+
+    - S: Move
+    Backwards
+
     - LMB: Paint
 
-    - Nums (0-3):
-    Switch Tools
+    - Nums (0-3): Switch Tools
+
+    - R: Reset canvas
+
+    -
+    C: Reset view
 
     - Have Fun'
   m_isRightToLeft: 0
